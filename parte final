@@ -1,0 +1,21 @@
+def deletar_livro():
+    visualizar_livros()
+    nome_livro = input('Digite o nome do livro que deseja deletar: ').capitalize()
+    with open("biblioteca.txt", "r") as file:
+        linhas = file.readlines()
+    livro_encontrado = False
+    novas_linhas = []
+    i = 0
+    while i < len(linhas):
+        if (f'Nome do livro: {nome_livro}') in linhas[i]:
+            livro_encontrado = True
+            i += 4  
+        else:
+            novas_linhas.append(linhas[i])
+            i += 1
+    if not livro_encontrado:
+        print("Livro não encontrado.")
+    else:
+        with open("biblioteca.txt", "w") as file:
+            file.writelines(novas_linhas)
+    return
