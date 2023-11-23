@@ -1,0 +1,234 @@
+import os 
+os.system("cls")
+
+
+def cadastrar_livros():
+    try:
+       file = open("biblioteca.txt", "a")
+       adicionar_livros = int(input("Quantos livros serão adicionados: "))
+       print()
+       for i in range (adicionar_livros): 
+           nome_livro = input(f"nome do livro: ").capitalize()
+           autor_livro = input(f"Nome do autor: ").capitalize()
+           categoria_livro = input(f"Categoria do livro: ").capitalize()
+           valor_livro = int(input(f"Qual valor do livro: "))
+           print()
+           file.write(f"Nome do livro: {nome_livro}\n")
+           file.write(f"Autor: {autor_livro}\n")
+           file.write(f"Categoria: {categoria_livro}\n")
+           file.write(f"Valor: {valor_livro} R$\n")
+           file.write("\n")
+       file.close()
+       return
+    except ValueError:
+        print("Atenção \nRefaça inserindo o valor correto do livro.")
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+
+def visualizar_livros():
+    try:
+      file = open("biblioteca.txt", "r")
+      biblioteca = file.read()
+      print(biblioteca)
+      file.close()
+      return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+    
+
+def atualizar_livro():
+    try:
+      visualizar_livros()
+      nome_livro = input("Digite o nome do livro que deseja atualizar: ").capitalize()
+      item_livro = input("Digite o que deseja mudar (Nome/Autor/Categoria/Valor): ").capitalize()
+      with open("biblioteca.txt", "r") as file:
+          linhas = file.readlines()
+      livro_encontrado = False
+      for i, linha in (linhas):
+          if (f'Nome do livro: {nome_livro}') in linha:
+              livro_encontrado = True
+              if item_livro == 'Nome':
+                  novo_nome = input('Digite o novo nome do livro: ').capitalize()
+                  linhas[i] = (f'Nome do livro: {novo_nome}\n')
+              elif item_livro == 'Autor':
+                  novo_autor = input('Digite o novo autor do livro: ').capitalize()
+                  linhas[i + 1] = (f'Autor: {novo_autor}\n')
+              elif item_livro == 'Categoria':
+                  nova_categoria = input('Digite a nova categoria do livro: ').capitalize()
+                  linhas[i + 2] = (f'Categoria: {nova_categoria}\n')
+              elif item_livro == 'Valor':
+                  novo_valor = str(input('Digite o novo valor do livro: '))
+                  linhas[i + 3] = (f'Valor: {novo_valor} R$\n')
+      if not livro_encontrado:
+          print("Livro não encontrado.")
+      else:
+          with open("biblioteca.txt", "w") as file:
+              file.writelines(linhas)
+      return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+
+def deletar_livro():
+    try:
+       visualizar_livros()
+       nome_livro = input('Digite o nome do livro que deseja deletar: ').capitalize()
+       with open("biblioteca.txt", "r") as file:
+           linhas = file.readlines()
+       livro_encontrado = False
+       novas_linhas = []
+       i = 0
+       while i < len(linhas):
+           if (f'Nome do livro: {nome_livro}') in linhas[i]:
+               livro_encontrado = True
+               i += 4  
+           else:
+               novas_linhas.append(linhas[i])
+               i += 1
+       if not livro_encontrado:
+           print("Livro não encontrado.")
+       else:
+           with open("biblioteca.txt", "w") as file:
+               file.writelines(novas_linhas)
+       return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+def contar_total():
+    try:
+       with open("biblioteca.txt", "r") as file:
+           linhas = file.readlines()
+           cont = 0
+           for linha in linhas:
+               if linha.startswith("Nome do livro: "):
+                   cont += 1
+           
+           print(f'{cont} livros cadastrados')
+       return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+
+def livros_por_categoria():
+    try:
+       categoria_livro = input("Digite o nome da categoria para saber quantos livros tem: ").capitalize()
+       with open("biblioteca.txt", "r") as file:
+           linhas = file.readlines()
+           cont = 0
+           for i in (linhas):
+               if (f'Categoria: {categoria_livro}') in i:
+                   cont+=1
+           print(f'{cont} livros nesta categoria')
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+def gasto_total():
+    try:
+      with open("biblioteca.txt", "r") as file:
+          total = 0
+          for linha in file:
+              if "Valor: " in linha:
+                  valor_str = linha.split("Valor: ")[1].strip().replace("R$", "") 
+                  total += int(valor_str)
+      print(f'{total:.2f} R$ gasto ao total')
+      return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+def gastos():
+    try:
+       with open("biblioteca.txt", "r") as file:
+           total = 0
+           for linha in file:
+               if "Valor: " in linha:
+                   valor_str = linha.split("Valor: ")[1].strip().replace("R$", "")
+                   total += int(valor_str)
+       total_gasto = total
+       gastos_em_livro = int(input("Quanto voce pretendia gastar em livros: "))
+       if total_gasto > gastos_em_livro:
+           print(f'vocé passou um pouco do limite!, gastou {(gastos_em_livro-total_gasto)*(-1)}R$ a mais em livros')
+       elif total_gasto < gastos_em_livro:
+           print(f'vocé ainda pode comprar mais um!, tem {gastos_em_livro-total_gasto}R$ para gastar com livros')
+       elif total_gasto == gastos_em_livro:
+           print("Não gaste mais em livros!, vocé atingil oque pretendia gastar")
+       return
+    except FileNotFoundError:
+        print("O arquivo não foi encontrado.")
+def extrato():
+    cat_extrt = input("Digite o nome da categoria para saber seu estrato nessa categoria: ").capitalize()
+    try:
+        with open("biblioteca.txt", "r") as file:
+            total = 0
+            categ = False
+            ler_linha = False
+            for linha in file:
+                if f'Categoria: {cat_extrt}' in linha:
+                    categ = True
+                    ler_linha = True
+                elif ler_linha and "Valor: " in linha:
+                    valor_str = linha.split("Valor: ")[1].strip().replace("R$", "").replace(",", ".")
+                    try:
+                        valor_float = float(valor_str)
+                        total += valor_float
+                    except ValueError:
+                        print(f"Valor inválido encontrado para a categoria {cat_extrt}.")
+                        return None
+                elif "Categoria: " in linha and ler_linha:
+                    ler_linha = False  
+                    break
+            if categ:
+                print(f'O extrato de {cat_extrt} é {total:.2f} R$')
+                return total
+            else:
+                print(f'Categoria "{cat_extrt}" não encontrada.')
+                return None
+    except FileNotFoundError:
+        print("O arquivo biblioteca.txt não foi encontrado.")
+        return None
+    
+file = open("biblioteca.txt", "a")
+
+tam = 30
+
+decisao = {
+    "1":"Cadastrar Livro",
+    "2":"Visualizar Livros",
+    "3":"Atualizar Livro",
+    "4":"Excluir Livro",
+    "5":"Livros por Categoria",
+    "6":"Extrato por Categoria",
+    "7":"Gastos Totais",
+    "8":"Contar Total de Livros",
+    "9":"Limite de Gastos",
+    "0":"Finalizar",
+ }
+
+while True:
+    print(f"+{'-'*tam}+")
+    print(f"|{'MENU':^{tam}}|")
+    print(f"+{'-'*tam}+")
+    for x,y in decisao.items():
+        print(f"|{f'{x}-{y}':{tam}}|")
+    print(f"+{'-'*tam}+")
+    
+    perg = input("Digite o comando que você gostaria de executar : ")
+
+    if perg not in decisao:
+        print("Alerta\n")
+        print("Opção inválida")
+        continue
+    elif perg == "1":
+        cadastrar_livros()
+    elif perg == "2":
+        visualizar_livros()
+    elif perg == "3":
+        atualizar_livro()
+    elif perg == "4":
+        deletar_livro()
+    elif perg == "5":
+        livros_por_categoria()
+    elif perg == "6":
+        extrato()
+    elif perg == "7":
+        gasto_total()
+    elif perg == "8":
+        contar_total()
+    elif perg == "9":
+        gastos()
+    elif perg == "0":
+        break
