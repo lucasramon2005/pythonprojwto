@@ -1,0 +1,34 @@
+while True:
+    print(f"+{'-'*tam}+")
+    print(f"|{'MENU':^{tam}}|")
+    print(f"+{'-'*tam}+")
+    for x,y in decisao.items():
+        print(f"|{f'{x}-{y}':{tam}}|")
+    print(f"+{'-'*tam}+")
+    
+    perg = input("Digite o comando que você gostaria de executar : ")
+
+    if perg not in decisao:
+        print("Alerta\n")
+        print("Opção inválida")
+        continue
+    elif perg == "1":
+        adicionar_livros()
+    elif perg == "2":
+        visualizar_livros()
+    elif perg == "3":
+        atualizar_livro()
+    elif perg == "4":
+        deletar_livro()
+    elif perg == "5":
+        livros_por_categoria()
+    elif perg == "6":
+        extrato()
+    elif perg == "7":
+        gasto_total()
+    elif perg == "8":
+        contar_total()
+    elif perg == "9":
+        gastos()
+    elif perg == "0":
+        break
