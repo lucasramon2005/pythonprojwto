@@ -1,0 +1,33 @@
+def extrato():
+    cat_extrt = input("Digite o nome da categoria para saber seu estrato nessa categoria: ").capitalize()
+    try:
+        with open("biblioteca.txt", "r") as file:
+            total = 0
+            categ = False
+            ler_linha = False
+            for linha in file:
+                if f'Categoria: {cat_extrt}' in linha:
+                    categ = True
+                    ler_linha = True
+                elif ler_linha and "Valor: " in linha:
+                    valor_str = linha.split("Valor: ")[1].strip().replace("R$", "").replace(",", ".")
+                    try:
+                        valor_float = float(valor_str)
+                        total += valor_float
+                    except ValueError:
+                        print(f"Valor inválido encontrado para a categoria {cat_extrt}.")
+                        return None
+                elif "Categoria: " in linha and ler_linha:
+                    ler_linha = False  
+                    break
+            if categ:
+                print(f'O extrato de {cat_extrt} é {total:.2f} R$')
+                return total
+            else:
+                print(f'Categoria "{cat_extrt}" não encontrada.')
+                return None
+    except FileNotFoundError:
+        print("O arquivo biblioteca.txt não foi encontrado.")
+        return None
+    
+file = open("biblioteca.txt", "a")
