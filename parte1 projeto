@@ -1,0 +1,21 @@
+import os 
+os.system("cls")
+
+
+def adicionar_livros():
+    file = open("biblioteca.txt", "a")
+    adicionar_livros = int(input("Quantos livros serão adicionados: "))
+    print()
+    for i in range (adicionar_livros): 
+        nome_livro = input(f"nome do livro: ").capitalize()
+        autor_livro = input(f"Nome do autor: ").capitalize()
+        categoria_livro = input(f"Categoria do livro: ").capitalize()
+        valor_livro = int(input(f"Qual valor do livro: "))
+        print()
+        file.write(f"Nome do livro: {nome_livro}\n")
+        file.write(f"Autor: {autor_livro}\n")
+        file.write(f"Categoria: {categoria_livro}\n")
+        file.write(f"Valor: {valor_livro} R$\n")
+        file.write("\n")
+    file.close()
+    return
